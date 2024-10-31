@@ -1,0 +1,21 @@
+:root {
+  --success-color: #2691d9;
+  --error-color: #e74c3c;
+}
+
+/* Common */
+.mt-8 {
+  margin-top: 8px !important;
+}
+
+.mt-16 {
+  margin-top: 16px !important;
+}
+
+.mt-32 {
+  margin-top: 32px !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
