@@ -1,16 +1,17 @@
-import React, { useEffect, useRef } from "react";
+import { FC, useEffect, useRef } from "react";
 import "./404.css";
 
-function NotFound() {
-  const torchRef = useRef(null);
+const NotFound: FC = () => {
+  const torchRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const handleMouseMove = (event) => {
+    const handleMouseMove = (event: MouseEvent) => {
       if (torchRef.current) {
         torchRef.current.style.top = `${event.pageY}px`;
         torchRef.current.style.left = `${event.pageX}px`;
       }
     };
+
     document.addEventListener("mousemove", handleMouseMove);
 
     return () => {
@@ -28,6 +29,7 @@ function NotFound() {
       <div className='torch' ref={torchRef}></div>
     </div>
   );
-}
+};
 
 export default NotFound;
+

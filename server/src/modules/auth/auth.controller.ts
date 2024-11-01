@@ -8,7 +8,7 @@ import { InfoDto } from './dto/getInfo.dto';
 import { ForgotPasswordDto } from './dto/forgotPassword.dto';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
 
-@Controller('auth')
+@Controller('api/auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
@@ -24,7 +24,7 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
-  @Post('getInfo')
+  @Post('me')
   @HttpCode(200)
   async getInfo(@Body() infoDto: InfoDto) {
     return this.authService.getInfo(infoDto.token);

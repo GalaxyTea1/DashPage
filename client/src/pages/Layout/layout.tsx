@@ -1,5 +1,5 @@
-import React from "react";
 import { Outlet } from "react-router-dom";
+import { Toaster } from "@/components/ui/toaster";
 
 export const Layout = () => {
   return (
@@ -9,6 +9,8 @@ export const Layout = () => {
         <Outlet />
       </div>
       <div className='footer_lt'></div>
+      <Toaster />
     </div>
   );
 };
+

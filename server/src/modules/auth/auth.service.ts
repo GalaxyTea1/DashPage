@@ -32,7 +32,9 @@ export class AuthService {
       });
       const savedUser = await this.usersRepository.save(user);
 
-      return this.login(savedUser);
+      // return this.login(savedUser);
+
+      return savedUser;
 
     } catch (error) {
       if (error.code === '23505') { // PostgreSQL unique constraint violation
