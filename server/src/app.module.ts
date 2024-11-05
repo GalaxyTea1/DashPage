@@ -5,6 +5,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { AuthModule } from './modules/auth/auth.module';
 import { databaseConfig, jwtConfig, mailConfig } from './config/database.config';
+import { PostsModule } from './modules/posts/posts.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { databaseConfig, jwtConfig, mailConfig } from './config/database.config'
       },
     }),
     AuthModule,
+    PostsModule
   ],
 })
 export class AppModule {}

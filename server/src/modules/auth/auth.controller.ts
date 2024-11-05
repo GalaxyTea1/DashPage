@@ -7,7 +7,9 @@ import { LoginDto } from './dto/login.dto';
 import { InfoDto } from './dto/getInfo.dto';
 import { ForgotPasswordDto } from './dto/forgotPassword.dto';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('api/auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

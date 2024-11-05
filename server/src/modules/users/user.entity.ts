@@ -1,31 +1,36 @@
-import { Entity, Column, PrimaryColumn, BeforeInsert } from 'typeorm';
-import { hash } from 'bcrypt';
-import { v4 as uuidv4 } from 'uuid';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { Post } from "../posts/post.entity";
+import { Comment } from "../comments/comment.entity";
 
-@Entity('users')
+@Entity("users")
 export class User {
-  @PrimaryColumn('uuid')
-  id: string;
+    @PrimaryGeneratedColumn("uuid")
+    id: string;
 
-  @Column({ unique: true })
-  email: string;
+    @Column({ unique: true })
+    email: string;
 
-  @Column()
-  password: string;
+    @Column()
+    password: string;
 
-  @Column({ nullable: true })
-  resetPasswordToken: string;
+    @Column()
+    displayName: string;
 
-  @Column({ nullable: true })
-  resetPasswordExpires: Date;
+    @Column({ nullable: true })
+    resetPasswordToken: string;
 
-  @BeforeInsert()
-  async beforeInsert() {
-    if (!this.password) {
-      throw new Error('Password is required');
-    }
-    
-    this.id = uuidv4();
-    this.password = await hash(this.password, 10);
-  }
+    @Column({ nullable: true })
+    resetPasswordExpires: Date;
+
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @UpdateDateColumn()
+    updatedAt: Date;
+
+    @OneToMany(() => Post, post => post.user)
+    posts: Post[];
+
+    @OneToMany(() => Comment, comment => comment.user)
+    comments: Comment[];
 }

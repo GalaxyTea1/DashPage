@@ -46,7 +46,7 @@ export class AuthService {
 }
 
   async login(user: User) {
-    const payload = { email: user.email, sub: user.id };
+    const payload = { email: user.email, userId: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };
@@ -55,7 +55,7 @@ export class AuthService {
   async getInfo(token: string) {
     try {
       const decoded = this.jwtService.verify(token); 
-      const userId = decoded.sub;
+      const userId = decoded.userId;
       
       const user = await this.usersRepository.findOne({where: {id: userId}});
       if (!user) {

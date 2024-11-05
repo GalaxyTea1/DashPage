@@ -7,6 +7,8 @@ import NotFound from "./pages/404/notFound";
 import Home from "./pages/Home/home";
 import { Layout } from "./pages/Layout/layout";
 import { ReactNode } from "react";
+import { Profile } from "./pages/Profile/profile";
+import { About } from "./pages/About/about";
 
 const App = () => {
   const ProtectedRoute = ({ children }: { children: ReactNode }) => {
@@ -38,6 +40,8 @@ const App = () => {
           >
             <Route index element={<Home />} />
             <Route path='home' element={<Home />} />
+            <Route path='profile' element={<Profile />} />
+            <Route path='about' element={<About />} />
           </Route>
 
           {/* 404 route */}
