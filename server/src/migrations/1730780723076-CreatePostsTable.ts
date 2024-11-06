@@ -8,12 +8,12 @@ export class CreatePostsTable1730780923076 implements MigrationInterface {
                 columns: [
                     {
                         name: "id",
-                        type: "serial",
+                        type: "uuid",
                         isPrimary: true,
                     },
                     {
-                        name: "userId",
-                        type: "integer",
+                        name: "user_id",
+                        type: "uuid",
                         isNullable: false,
                     },
                     {
@@ -29,28 +29,26 @@ export class CreatePostsTable1730780923076 implements MigrationInterface {
                     },
                     {
                         name: "tags",
-                        type: "jsonb",
+                        type: "json",
                         isNullable: true,
-                        default: "[]",
                     },
                     {
                         name: "avatars",
-                        type: "jsonb",
+                        type: "json",
                         isNullable: true,
-                        default: "[]",
                     },
                     {
-                        name: "likesCount",
+                        name: "likes_count",
                         type: "integer",
                         default: 0,
                     },
                     {
-                        name: "createdAt",
+                        name: "created_at",
                         type: "timestamp",
                         default: "CURRENT_TIMESTAMP",
                     },
                     {
-                        name: "updatedAt",
+                        name: "updated_at",
                         type: "timestamp",
                         default: "CURRENT_TIMESTAMP",
                     },
@@ -63,7 +61,7 @@ export class CreatePostsTable1730780923076 implements MigrationInterface {
         await queryRunner.createForeignKey(
             "posts",
             new TableForeignKey({
-                columnNames: ["userId"],
+                columnNames: ["user_id"],
                 referencedColumnNames: ["id"],
                 referencedTableName: "users",
                 onDelete: "CASCADE",
@@ -83,17 +81,9 @@ export class CreatePostsTable1730780923076 implements MigrationInterface {
 
         await queryRunner.query(`
             CREATE TRIGGER update_posts_updated_at
-                BEFORE UPDATE ON posts
-                FOR EACH ROW
-                EXECUTE FUNCTION update_updated_at_column();
-        `);
-
-        // Insert sample data
-        await queryRunner.query(`
-            INSERT INTO posts (user_id, title, content, tags, avatars, likes_count) VALUES
-            (1, 'First Post', 'Content of first post', '["tag1", "tag2"]', '["avatar1.jpg"]', 0),
-            (1, 'Second Post', 'Content of second post', '["tag3"]', '["avatar2.jpg"]', 0),
-            (2, 'Hello World', 'Content of third post', '["tag1", "tag4"]', '[]', 0);
+            BEFORE UPDATE ON posts
+            FOR EACH ROW
+            EXECUTE PROCEDURE update_updated_at_column();  
         `);
     }
 

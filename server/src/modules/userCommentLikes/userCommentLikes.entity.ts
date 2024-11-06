@@ -5,19 +5,19 @@ import { User } from "../users/user.entity";
 @Entity("userCommentLikes")
 export class UserCommentLike {
     @PrimaryColumn()
-    userId: string;
+    user_id: string;
 
     @PrimaryColumn()
-    commentId: string;
+    comment_id: string;
 
     @CreateDateColumn()
-    createdAt: Date;
+    created_at: Date;
 
     @ManyToOne(() => User, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'userId' })
+    @JoinColumn({ name: 'user_id' })
     user: User;
 
     @ManyToOne(() => Comment, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'commentId' })
+    @JoinColumn({ name: 'comment_id' })
     comment: Comment;
 }

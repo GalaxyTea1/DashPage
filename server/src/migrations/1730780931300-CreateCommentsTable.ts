@@ -8,17 +8,17 @@ export class CreateCommentsTable1730780931300 implements MigrationInterface {
                 columns: [
                     {
                         name: "id",
-                        type: "serial",
+                        type: "uuid",
                         isPrimary: true,
                     },
                     {
-                        name: "postId",
-                        type: "integer",
+                        name: "post_id",
+                        type: "uuid",
                         isNullable: false,
                     },
                     {
-                        name: "userId",
-                        type: "integer",
+                        name: "user_id",
+                        type: "uuid",
                         isNullable: false,
                     },
                     {
@@ -27,22 +27,22 @@ export class CreateCommentsTable1730780931300 implements MigrationInterface {
                         isNullable: false,
                     },
                     {
-                        name: "isAnonymous",
+                        name: "is_anonymous",
                         type: "boolean",
                         default: false,
                     },
                     {
-                        name: "likesCount",
+                        name: "likes_count",
                         type: "integer",
                         default: 0,
                     },
                     {
-                        name: "createdAt",
+                        name: "created_at",
                         type: "timestamp",
                         default: "CURRENT_TIMESTAMP",
                     },
                     {
-                        name: "updatedAt",
+                        name: "updated_at",
                         type: "timestamp",
                         default: "CURRENT_TIMESTAMP",
                     },
@@ -55,7 +55,7 @@ export class CreateCommentsTable1730780931300 implements MigrationInterface {
         await queryRunner.createForeignKey(
             "comments",
             new TableForeignKey({
-                columnNames: ["postId"],
+                columnNames: ["post_id"],
                 referencedColumnNames: ["id"],
                 referencedTableName: "posts",
                 onDelete: "CASCADE",
@@ -65,7 +65,7 @@ export class CreateCommentsTable1730780931300 implements MigrationInterface {
         await queryRunner.createForeignKey(
             "comments",
             new TableForeignKey({
-                columnNames: ["userId"],
+                columnNames: ["user_id"],
                 referencedColumnNames: ["id"],
                 referencedTableName: "users",
                 onDelete: "CASCADE",
@@ -87,15 +87,7 @@ export class CreateCommentsTable1730780931300 implements MigrationInterface {
             CREATE TRIGGER update_comments_updated_at
                 BEFORE UPDATE ON comments
                 FOR EACH ROW
-                EXECUTE FUNCTION update_updated_at_column();
-        `);
-
-        // Insert sample data
-        await queryRunner.query(`
-            INSERT INTO comments (post_id, user_id, content, is_anonymous, likes_count) VALUES
-            (1, 2, 'Great post!', false, 0),
-            (1, 3, 'Thanks for sharing', true, 0),
-            (2, 1, 'Interesting topic', false, 0);
+                EXECUTE PROCEDURE update_updated_at_column();
         `);
     }
 

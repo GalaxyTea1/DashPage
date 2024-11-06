@@ -20,6 +20,6 @@ import { User } from '../users/user.entity';
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
   controllers: [AuthController],
-  exports: [AuthService],
+  exports: [AuthService, JwtModule, JwtStrategy],
 })
 export class AuthModule {}

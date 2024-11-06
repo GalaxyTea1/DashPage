@@ -1,18 +1,20 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn, JoinColumn } from "typeorm";
+import { Entity, PrimaryColumn, BeforeInsert, Column, ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn, JoinColumn } from "typeorm";
 import { Exclude, Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from "../users/user.entity";
 import { Comment } from "../comments/comment.entity";
+import { v4 as uuidv4 } from 'uuid';
+import { UserPostLike } from "../userPostLikes/userPostLikes.entity";
 
 @Entity("posts")
 export class Post {
     @ApiProperty({ description: 'The post ID' })
-    @PrimaryGeneratedColumn("uuid")
+    @PrimaryColumn("uuid")
     id: string;
 
     @ApiProperty({ description: 'The user ID who created the post' })
     @Column()
-    userId: string;
+    user_id: string;
 
     @ApiProperty({ description: 'The post title' })
     @Column()
@@ -32,18 +34,26 @@ export class Post {
 
     @ApiProperty({ description: 'Number of likes' })
     @Column({ default: 0 })
-    likesCount: number;
+    likes_count: number;
 
     @CreateDateColumn()
-    createdAt: Date;
+    created_at: Date;
 
     @UpdateDateColumn()
-    updatedAt: Date;
+    updated_at: Date;
 
     @ManyToOne(() => User, user => user.posts, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'userId' })
+    @JoinColumn({ name: 'user_id' })
     user: User;
 
     @OneToMany(() => Comment, comment => comment.post)
     comments: Comment[];
+
+    @OneToMany(() => UserPostLike, userPostLike => userPostLike.post)
+    userPostLikes: UserPostLike[];
+
+    @BeforeInsert()
+    async beforeInsert() {
+    this.id = uuidv4();
+  }
 }

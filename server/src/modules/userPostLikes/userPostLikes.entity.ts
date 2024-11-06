@@ -5,19 +5,19 @@ import { Post } from "../posts/post.entity";
 @Entity("userPostLikes")
 export class UserPostLike {
     @PrimaryColumn()
-    userId: string;
+    user_id: string;
 
     @PrimaryColumn()
-    postId: string;
+    post_id: string;
 
     @CreateDateColumn()
-    createdAt: Date;
+    created_at: Date;
 
     @ManyToOne(() => User, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'userId' })
+    @JoinColumn({ name: 'user_id' })
     user: User;
 
     @ManyToOne(() => Post, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'postId' })
+    @JoinColumn({ name: 'post_id' })
     post: Post;
 }

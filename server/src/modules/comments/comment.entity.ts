@@ -1,38 +1,44 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn } from "typeorm";
+import { Entity, PrimaryColumn, BeforeInsert, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn } from "typeorm";
 import { Post } from "../posts/post.entity";
 import { User } from "../users/user.entity";
+import { v4 as uuidv4 } from 'uuid';
 
 @Entity("comments")
 export class Comment {
-    @PrimaryGeneratedColumn("uuid")
+    @PrimaryColumn("uuid")
     id: string;
 
     @Column()
-    postId: string;
+    post_id: string;
 
     @Column()
-    userId: string;
+    user_id: string;
 
     @Column("text")
     content: string;
 
     @Column({ default: false })
-    isAnonymous: boolean;
+    is_anonymous: boolean;
 
     @Column({ default: 0 })
-    likesCount: number;
+    likes_count: number;
 
     @CreateDateColumn()
-    createdAt: Date;
+    created_at: Date;
 
     @UpdateDateColumn()
-    updatedAt: Date;
+    updated_at: Date;
 
     @ManyToOne(() => Post, post => post.comments, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'postId' })
+    @JoinColumn({ name: 'post_id' })
     post: Post;
 
     @ManyToOne(() => User, user => user.comments, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'userId' })
+    @JoinColumn({ name: 'user_id' })
     user: User;
+
+    @BeforeInsert()
+    async beforeInsert() {
+        this.id = uuidv4();
+    }
 }

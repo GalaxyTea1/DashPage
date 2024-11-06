@@ -7,19 +7,19 @@ export class CreateUserPostLikesTable1730780937697 implements MigrationInterface
                 name: "user_post_likes",
                 columns: [
                     {
-                        name: "userId",
-                        type: "integer",
+                        name: "user_id",
+                        type: "uuid",
                         isNullable: false,
                         isPrimary: true
                     },
                     {
-                        name: "postId",
-                        type: "integer",
+                        name: "post_id",
+                        type: "uuid",
                         isNullable: false,
                         isPrimary: true
                     },
                     {
-                        name: "createdAt",
+                        name: "created_at",
                         type: "timestamp",
                         default: "CURRENT_TIMESTAMP",
                     },
@@ -27,7 +27,7 @@ export class CreateUserPostLikesTable1730780937697 implements MigrationInterface
                 indices: [
                     {
                         name: "idx_user_post_likes_post_id",
-                        columnNames: ["postId"]
+                        columnNames: ["post_id"]
                     }
                 ]
             }),
@@ -38,7 +38,7 @@ export class CreateUserPostLikesTable1730780937697 implements MigrationInterface
         await queryRunner.createForeignKey(
             "user_post_likes",
             new TableForeignKey({
-                columnNames: ["userId"],
+                columnNames: ["user_id"],
                 referencedColumnNames: ["id"],
                 referencedTableName: "users",
                 onDelete: "CASCADE",
@@ -48,14 +48,14 @@ export class CreateUserPostLikesTable1730780937697 implements MigrationInterface
         await queryRunner.createForeignKey(
             "user_post_likes",
             new TableForeignKey({
-                columnNames: ["postId"],
+                columnNames: ["post_id"],
                 referencedColumnNames: ["id"],
                 referencedTableName: "posts",
                 onDelete: "CASCADE",
             })
         );
 
-        // Create trigger to automatically update posts.likesCount
+        // Create trigger to automatically update posts.likes_count
         await queryRunner.query(`
             CREATE OR REPLACE FUNCTION update_post_likes_count()
             RETURNS TRIGGER AS $$
@@ -80,26 +80,18 @@ export class CreateUserPostLikesTable1730780937697 implements MigrationInterface
             CREATE TRIGGER update_post_likes_count_trigger
             AFTER INSERT OR DELETE ON user_post_likes
             FOR EACH ROW
-            EXECUTE FUNCTION update_post_likes_count();
+            EXECUTE PROCEDURE update_post_likes_count();
         `);
 
-        // Insert sample data
-        await queryRunner.query(`
-            INSERT INTO user_post_likes (user_id, post_id) VALUES
-            (2, 1),
-            (3, 1),
-            (1, 2);
-        `);
-
-        // Update initial likesCount in posts table
-        await queryRunner.query(`
-            UPDATE posts p 
-            SET likes_count = (
-                SELECT COUNT(*) 
-                FROM user_post_likes 
-                WHERE post_id = p.id
-            );
-        `);
+        // Update initial likes_count in posts table
+        // await queryRunner.query(`
+        //     UPDATE posts p 
+        //     SET likes_count = (
+        //         SELECT COUNT(*) 
+        //         FROM user_post_likes 
+        //         WHERE postId = p.id
+        //     );
+        // `);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

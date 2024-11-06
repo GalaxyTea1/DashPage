@@ -16,6 +16,7 @@ export class PostsController {
     @ApiOperation({ summary: 'Create a new post' })
     @ApiResponse({ status: 201, description: 'Post created successfully' })
     create(@Body() createPostDto: CreatePostDto, @GetUser() user: User) {
+        console.log("post controller");
         return this.postsService.create(createPostDto, user);
     }
 
@@ -35,5 +36,13 @@ export class PostsController {
     @ApiResponse({ status: 404, description: 'Post not found' })
     findOne(@Param('id') id: string) {
         return this.postsService.findOne(id);
+    }
+
+    @Post(':id/like')
+    @UseGuards(JwtAuthGuard)
+    @ApiOperation({ summary: 'Toggle like on post' })
+    @ApiResponse({ status: 200, description: 'Like status toggled successfully' })
+    async toggleLike(@Param('id') id: string, @GetUser() user: User) {
+        return this.postsService.toggleLike(id, user);
     }
 }

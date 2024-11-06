@@ -1,6 +1,6 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { jwtConfig } from '../../../config/database.config';
 import { JwtPayload } from '../interfaces/jwtPayload.interface';
 
@@ -15,6 +15,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload) {
-    return { userId: payload.userId, email: payload.email };
+    try {
+      console.log('Payload in validate:', payload);
+      if (!payload.user_id || !payload.email) {
+        throw new UnauthorizedException('Invalid token payload');
+      }
+      return { id: payload.user_id, email: payload.email };
+    } catch (error) {
+      console.error('Error in JWT validation:', error);
+      throw new UnauthorizedException('Token validation failed');
+    }
   }
 }

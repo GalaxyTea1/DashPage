@@ -46,7 +46,7 @@ export class AuthService {
 }
 
   async login(user: User) {
-    const payload = { email: user.email, userId: user.id };
+    const payload = { email: user.email, user_id: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };
@@ -55,7 +55,7 @@ export class AuthService {
   async getInfo(token: string) {
     try {
       const decoded = this.jwtService.verify(token); 
-      const userId = decoded.userId;
+      const userId = decoded.user_id;
       
       const user = await this.usersRepository.findOne({where: {id: userId}});
       if (!user) {
@@ -86,8 +86,8 @@ export class AuthService {
     }
 
     const token = uuidv4();
-    user.resetPasswordToken = token;
-    user.resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hour
+    user.reset_password_token = token;
+    user.reset_password_expires = new Date(Date.now() + 3600000); // 1 hour
     await this.usersRepository.save(user);
 
     await this.mailerService.sendMail({
@@ -106,8 +106,8 @@ export class AuthService {
   async resetPassword(token: string, newPassword: string) {
     const user = await this.usersRepository.findOne({
       where: {
-        resetPasswordToken: token,
-        resetPasswordExpires: MoreThan(new Date()),
+        reset_password_token: token,
+        reset_password_expires: MoreThan(new Date()),
       },
     });
 
@@ -116,8 +116,8 @@ export class AuthService {
     }
 
     user.password = newPassword;
-    user.resetPasswordToken = null;
-    user.resetPasswordExpires = null;
+    user.reset_password_token = null;
+    user.reset_password_expires = null;
     await this.usersRepository.save(user);
 
     return { message: 'Password successfully reset' };
